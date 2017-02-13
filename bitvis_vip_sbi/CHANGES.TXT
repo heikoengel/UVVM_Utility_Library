@@ -1,5 +1,18 @@
 Bitvis VIP SBI - Overview on Versions and Changes
 ==============================================================
+
+v2.0.2
+----------
+Released: 2017-02-13
+- Applied minor bugfixes and updated documentation for v2.0.x
+
+
+v2.0.1
+----------
+Released: 2017-02-01
+- Applied minor bugfixes after beta testing
+
+
 v2.0.0
 ----------
 Released: 2017-01-25

@@ -1,5 +1,5 @@
 --========================================================================================================================
--- Copyright (c) 2016 by Bitvis AS.  All rights reserved.
+-- Copyright (c) 2017 by Bitvis AS.  All rights reserved.
 -- You should have received a copy of the license file containing the MIT License (see LICENSE.TXT), if not, 
 -- contact Bitvis AS <support@bitvis.no>.
 --
@@ -340,7 +340,7 @@ package body sbi_bfm_pkg is
         normalize_and_check(data_value, wdata, ALLOW_NARROWER, "data_value", "sbi_core_in.wdata", msg);
     variable v_clk_cycles_waited  : natural := 0;
   begin
-    wait_until_given_time_after_rising_edge(clk, config.clock_period/4);
+    wait_until_given_time_before_rising_edge(clk, config.clock_period/4, config.clock_period);
     cs    <= '1';
     wena  <= '1';
     rena  <= '0';
@@ -351,16 +351,18 @@ package body sbi_bfm_pkg is
       check_value(ready = '1' or ready = '0', failure, "Verifying that ready signal is set to either '1' or '0' when in use", scope, ID_NEVER, msg_id_panel);
     end if;
 
-    wait for config.clock_period;
+    wait until rising_edge(clk);
     while (config.use_ready_signal and ready = '0') loop
       if v_clk_cycles_waited = 0 then
         log(config.id_for_bfm_wait, proc_call & " waiting for response (sbi ready=0) " & add_msg_delimiter(msg), scope, msg_id_panel);
       end if;
-      wait for config.clock_period;
+      wait until rising_edge(clk);
       v_clk_cycles_waited := v_clk_cycles_waited + 1;
       check_value(v_clk_cycles_waited <= config.max_wait_cycles, config.max_wait_cycles_severity,
                   ": Timeout while waiting for sbi ready", scope, ID_NEVER, msg_id_panel, proc_call);
     end loop;
+    
+    wait_until_given_time_after_rising_edge(clk, config.clock_period/4);
 
     cs  <= '0';
     wena<= '0';
@@ -422,7 +424,7 @@ package body sbi_bfm_pkg is
       write(v_proc_call, ext_proc_call & " while executing " & local_proc_name);
     end if;
 
-    wait_until_given_time_after_rising_edge(clk, config.clock_period/4);
+    wait_until_given_time_before_rising_edge(clk, config.clock_period/4, config.clock_period);
     cs   <= '1';
     wena <= '0';
     rena <= '1';
@@ -432,13 +434,13 @@ package body sbi_bfm_pkg is
       check_value(ready = '1' or ready = '0', failure, "Verifying that ready signal is set to either '1' or '0' when in use", scope, ID_NEVER, msg_id_panel);
     end if;
     
-    wait for config.clock_period;
+    wait until rising_edge(clk);
 
     if config.use_fixed_wait_cycles_read then
       -- Wait for a fixed number of clk cycles
       for i in 1 to config.fixed_wait_cycles_read loop
         v_clk_cycles_waited := v_clk_cycles_waited + 1;
-        wait for config.clock_period;
+        wait until rising_edge(clk);
       end loop;
     else
       -- If configured, wait for ready = '1'
@@ -446,17 +448,20 @@ package body sbi_bfm_pkg is
         if v_clk_cycles_waited = 0 then
           log(config.id_for_bfm_wait, v_proc_call.all & " waiting for response (sbi ready=0) " & add_msg_delimiter(msg), scope, msg_id_panel);
         end if;
-        wait for config.clock_period;
+        wait until rising_edge(clk);
         v_clk_cycles_waited := v_clk_cycles_waited + 1;
         check_value(v_clk_cycles_waited <= config.max_wait_cycles, config.max_wait_cycles_severity,
                     ": Timeout while waiting for sbi ready", scope, ID_NEVER, msg_id_panel, v_proc_call.all);
       end loop;
     end if; 
+    
+    v_data_value  := rdata;
+    data_value    := v_data_value;
+    
+    wait_until_given_time_after_rising_edge(clk, config.clock_period/4);
 
     cs  <= '0';
     rena<= '0';
-    v_data_value  := rdata;
-    data_value    := v_data_value;
     if ext_proc_call = "" then -- proc_name = "sbi_read" 
       log(config.id_for_bfm, v_proc_call.all & "=> " & to_string(v_data_value, HEX, SKIP_LEADING_0, INCL_RADIX) & ". " & add_msg_delimiter(msg), scope, msg_id_panel);
     else
