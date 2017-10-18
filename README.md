@@ -23,9 +23,9 @@ UVVM has been tested with the following simulators:
 
 ## Introduction to Utility Library - including manuals
 All documents including powerpoint presentations are available in the doc-directory of Utility_Library on GitHub.
-This is just a [fast access link to some interesting info:](http://bitvis.no/resources/uvvm-utility-library-download/)
-- *'Making a simple, structured and efficient VHDL testbench – Step-by-step'* - A brief introduction to making good testbenches - mainly independent of language and library, but using Bitvis Utility Library as an example
-- *'UVVM Utility Library Concepts and usage'*  - Going into more details of the library
+This is just a fast access link to some interesting info:
+- *['Making a simple, structured and efficient VHDL testbench – Step-by-step'*] (https://github.com/UVVM/UVVM_Utility_Library/blob/master/uvvm_util/Simple_TB_step_by_step.pps) - A brief introduction to making good testbenches - mainly independent of language and library, but using Bitvis Utility Library as an example
+- *['UVVM Utility Library Concepts and usage'*] (https://github.com/UVVM/UVVM_Utility_Library/blob/master/uvvm_util/UVVM_Utility_Library_Concepts_and_Usage.pps)  - Going into more details of the library
 
 ## License
 
