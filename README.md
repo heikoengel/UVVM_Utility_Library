@@ -18,8 +18,8 @@ The Utility Library is dead easy to use. The extremely low user threshold allows
 ## Prerequisites
 UVVM Utility Library is tool and library independent, but must be compiled with VHDL 2008.
 UVVM has been tested with the following simulators:
-- Modelsim version 10.3d
-- Riviera-PRO version: 2015.10.85
+- Modelsim version 10.4d
+- Riviera-PRO version: 2017.02.99.6498
 
 ## Introduction to Utility Library - including manuals
 All documents including powerpoint presentations are available in the doc-directory of Utility_Library on GitHub.
